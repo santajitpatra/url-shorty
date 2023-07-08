@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const secret = "secret";
+const secret = "secret-to-hogan-secret";
 
 function setUser(user) {
   return jwt.sign(
