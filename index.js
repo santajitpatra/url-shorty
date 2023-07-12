@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -11,10 +12,11 @@ const userRoute = require("./routes/user");
 const { checkForAuthentication, restrictTo } = require("./middlewares/auth");
 
 const app = express();
-const port = 8000;
+const PORT = process.env.PORT
+const MONGO_DB_URL = process.env.MONGO_DB_URL;
 
-connectToMongoDB("mongodb://127.0.0.1:27017/short_url").then(
-  console.log("mongodb://127.0.0.1:27017/short_url successfully connected")
+connectToMongoDB(MONGO_DB_URL).then(
+  console.log("mongodb successfully connected")
 );
 
 app.set("view engine", "ejs");
@@ -23,7 +25,7 @@ app.set("views", path.resolve("./views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(checkForAuthentication)
+app.use(checkForAuthentication);
 
 app.use("/url", restrictTo(["NORMAL", "ADMIN"]), urlRoute);
 app.use("/user", userRoute);
@@ -46,6 +48,6 @@ app.get("/url/:shortId", async (req, res) => {
   res.redirect(entry.redirectURL);
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Example app listening on PORT ${PORT}`);
 });
